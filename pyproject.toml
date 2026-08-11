@@ -3,7 +3,7 @@ name = "typed-concurrency"
 version = "0.0.0"
 description = "Typed structured concurrency with Go-ish ergonomics for asyncio"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Veya Fürst", email = "ghgstefan@gmail.com" }]
 keywords = ["asyncio", "concurrency", "structured-concurrency", "typing"]
@@ -12,7 +12,10 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
 ]
-dependencies = []
+dependencies = ["typed-errs>=0,<1"]
+
+[tool.uv.sources]
+typed-errs = { git = "https://github.com/0xveya/typed-errs" }
 
 [project.urls]
 PyPI = "https://pypi.org/project/typed-concurrency/"
@@ -34,7 +37,7 @@ typed_concurrency = ["py.typed"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
@@ -46,11 +49,11 @@ convention = "google"
 testpaths = ["tests"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 strict = true
 files = ["src", "tests"]
 
 [tool.basedpyright]
 include = ["src", "tests"]
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 typeCheckingMode = "standard"
