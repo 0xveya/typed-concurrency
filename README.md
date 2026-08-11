@@ -1,5 +1,10 @@
 # typed-concurrency
 
+[![PyPI](https://img.shields.io/pypi/v/typed-concurrency)](https://pypi.org/project/typed-concurrency/)
+[![CI](https://github.com/0xveya/typed-concurrency/actions/workflows/ci.yml/badge.svg)](https://github.com/0xveya/typed-concurrency/actions/workflows/ci.yml)
+
+**[View typed-concurrency on PyPI](https://pypi.org/project/typed-concurrency/)**
+
 Typed structured concurrency with Go-ish ergonomics on top of `asyncio`.
 
 ```bash
