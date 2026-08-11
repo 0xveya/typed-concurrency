@@ -14,10 +14,11 @@ _CLOSED = object()
 
 
 class _Receive:
-    """Private type for the public ``RECV`` operator marker."""
+    """Private type for the public ``recv`` operator marker."""
 
 
-RECV = _Receive()
+recv = _Receive()
+RECV = recv
 
 
 class ChannelClosed(Exception):
@@ -83,16 +84,16 @@ class Channel(Generic[T]):
         return self.recv().__await__()
 
     def __rshift__(self, marker: _Receive) -> Coroutine[Any, Any, Option[T]]:
-        """Return the Go-ish ``await (channel >> RECV)`` receive form.
+        """Return the Go-ish ``await (channel >> recv)`` receive form.
 
         Args:
-            marker: The exported ``RECV`` marker.
+            marker: The exported ``recv`` marker.
 
         Raises:
-            TypeError: If an object other than ``RECV`` is used.
+            TypeError: If an object other than ``recv`` is used.
         """
-        if marker is not RECV:
-            raise TypeError("Channel receive uses `channel >> RECV`")
+        if marker is not recv:
+            raise TypeError("Channel receive uses `channel >> recv`")
         return self.recv()
 
     async def __aiter__(self) -> AsyncIterator[T]:

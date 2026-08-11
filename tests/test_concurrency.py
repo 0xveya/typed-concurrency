@@ -8,7 +8,7 @@ from typing import cast
 import pytest
 from typed_errs import Nothing, Some
 
-from typed_concurrency import RECV, Channel, ChannelClosed, Group, go, process, thread
+from typed_concurrency import Channel, ChannelClosed, Group, go, process, recv, thread
 
 
 def test_go_preserves_a_task_result() -> None:
@@ -98,7 +98,7 @@ def test_channel_async_iteration_and_operators() -> None:
     async def run() -> tuple[Some[int], list[int]]:
         channel = Channel[int]()
         await (channel << 1)
-        first = await (channel >> RECV)
+        first = await (channel >> recv)
         assert isinstance(first, Some)
         await (channel << 2)
         await (channel << 3)

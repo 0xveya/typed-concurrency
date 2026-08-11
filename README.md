@@ -62,7 +62,7 @@ closed, drained channel returns `Nothing()`. This avoids a nullable receive
 protocol while keeping normal closure distinct from an error.
 
 ```python
-from typed_concurrency import RECV, Channel
+from typed_concurrency import Channel, recv
 from typed_errs import Some
 
 channel = Channel[int](16)
@@ -96,9 +96,16 @@ async with Group() as group:
     group << consumer(channel)
 ```
 
-`await (channel << value)` sends and `await (channel >> RECV)` receives. The
+`await (channel << value)` sends and `await (channel >> recv)` receives. The
 compact `await channel` receive form is also available. They are sugar over
 `send()` and `recv()`, which remain the canonical API.
+
+```python
+from typed_concurrency import recv
+
+await (channel << 42)
+value = await (channel >> recv)
+```
 
 `capacity=0` follows `asyncio.Queue` and means an unbounded buffer. It is not a
 Go-style rendezvous channel.
@@ -120,8 +127,38 @@ serialization have a real cost.
 
 Run the small end-to-end example with `uv run python examples/basic.py`.
 
-Run `mise run check` for formatting-adjacent linting, type checks, tests, and a
-package build.
+## Ecosystem
+
+- [typed-errs](https://github.com/0xveya/typed-errs) provides the `Option`
+  values used by channel receives after normal closure.
+- [python-crimes](https://github.com/0xveya/python-crimes) provides the
+  complementary pipe, deferred-cleanup, and matching helpers.
+- [typed-file-io](https://github.com/0xveya/typed-file-io) supplies typed file
+  I/O that combines naturally with `thread()` for blocking reads and writes.
+
+## Dependencies
+
+- [typed-errs](https://pypi.org/project/typed-errs/)
+
+## Use and contributions
+
+This is a personal library, but it is not private or locked to my projects.
+You may use it in general Python work and in 42 projects under the MIT license;
+just follow the rules that apply to your campus and assignment.
+
+Contributions are welcome: open an issue or send a pull request. I do not care
+whether a contribution is written by hand, AI-assisted, or generated another
+way; I care about whether it is correct, tested, understandable, and a good
+fit. Because this is opinionated personal infrastructure, pull requests are
+reviewed selectively and are likely to be rejected unless they clearly improve
+the library without making it harder to maintain.
+
+## Development and release
+
+Run `mise run check` for linting, type checks, tests, and a package build.
+Every push to `master` publishes a unique `0.0.<CI run>` ZeroVer version through
+PyPI Trusted Publishing. `mise run publish` remains available for manual
+publishing.
 
 ## License
 
