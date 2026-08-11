@@ -13,6 +13,13 @@ T = TypeVar("T")
 _CLOSED = object()
 
 
+class _Receive:
+    """Private type for the public ``RECV`` operator marker."""
+
+
+RECV = _Receive()
+
+
 class ChannelClosed(Exception):
     """Raised when a value is sent after its channel has closed."""
 
@@ -74,6 +81,19 @@ class Channel(Generic[T]):
     def __await__(self) -> Generator[Any, None, Option[T]]:
         """Await the channel as shorthand for :meth:`recv`."""
         return self.recv().__await__()
+
+    def __rshift__(self, marker: _Receive) -> Coroutine[Any, Any, Option[T]]:
+        """Return the Go-ish ``await (channel >> RECV)`` receive form.
+
+        Args:
+            marker: The exported ``RECV`` marker.
+
+        Raises:
+            TypeError: If an object other than ``RECV`` is used.
+        """
+        if marker is not RECV:
+            raise TypeError("Channel receive uses `channel >> RECV`")
+        return self.recv()
 
     async def __aiter__(self) -> AsyncIterator[T]:
         """Yield values until the channel closes."""

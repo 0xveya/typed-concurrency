@@ -62,7 +62,7 @@ closed, drained channel returns `Nothing()`. This avoids a nullable receive
 protocol while keeping normal closure distinct from an error.
 
 ```python
-from typed_concurrency import Channel
+from typed_concurrency import RECV, Channel
 from typed_errs import Some
 
 channel = Channel[int](16)
@@ -96,8 +96,9 @@ async with Group() as group:
     group << consumer(channel)
 ```
 
-`await (channel << value)` sends and `await channel` receives; they are sugar
-over `send()` and `recv()`. The named methods are the canonical API.
+`await (channel << value)` sends and `await (channel >> RECV)` receives. The
+compact `await channel` receive form is also available. They are sugar over
+`send()` and `recv()`, which remain the canonical API.
 
 `capacity=0` follows `asyncio.Queue` and means an unbounded buffer. It is not a
 Go-style rendezvous channel.
